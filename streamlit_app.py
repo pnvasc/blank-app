@@ -17,16 +17,8 @@ st.set_page_config(
 # Load your dataframes
 # Assuming these are already loaded in your environment
 # If not, you'll need to add code to load them from files
-data = pd.read_csv('NoA-Connect-JrDataScience-Case(in).csv')  # Original dataframe with order_date, currency, and purchase_amount
-customer_features_clustered = pd.read_csv('customer_features_clustered.csv')  # Dataframe with features and clusters
-data['order_date'] = pd.to_datetime(data['order_date'])
-
-# Make sure date columns in customer_features are also datetime if needed
-if 'first_purchase' in customer_features_clustered.columns:
-    customer_features_clustered['first_purchase'] = pd.to_datetime(customer_features_clustered['first_purchase'])
-    
-if 'last_purchase' in customer_features_clustered.columns:
-    customer_features_clustered['last_purchase'] = pd.to_datetime(customer_features_clustered['last_purchase'])
+data = data  # Original dataframe with order_date, currency, and purchase_amount
+customer_features_clustered = customer_features_clustered  # Dataframe with features and clusters
 
 # Title and description
 st.title("Customer Segmentation Analysis Dashboard")
@@ -157,7 +149,7 @@ with row2_col2:
     })
     
     # Create radar chart
-    categories = ['Monetary Value', 'Purchase Frequency', 'Recency', 'Customer Value Score']
+    categories = ['Monetary Value', 'Purchase Frequency', 'Recency (lower is better)', 'Customer Value Score']
     
     fig = go.Figure()
     
@@ -193,6 +185,9 @@ with row2_col2:
 st.subheader("RFM Analysis: Monetary vs Frequency")
     
 # Create scatter plot with hover info
+# Calculate average spend per day for visualization
+filtered_customers['avg_daily_spend'] = filtered_customers['monetary'] / filtered_customers['tenure_days'].clip(lower=1)
+    
 fig = px.scatter(
     filtered_customers,
     x='frequency',
@@ -200,7 +195,7 @@ fig = px.scatter(
     color='cluster',
     size='customer_value_score',
     hover_name='customer_id',
-    hover_data=['recency', 'tenure_days', 'purchases_per_day', 'spend_per_day'],
+    hover_data=['recency', 'tenure_days', 'purchases_per_day', 'avg_daily_spend'],
     color_discrete_map={1: "#1f77b4", 0: "#ff7f0e"},
     labels={
         'frequency': 'Purchase Frequency (Count)',
@@ -232,7 +227,7 @@ fig.update_traces(
                   "<b>Days Since Last Purchase:</b> %{customdata[0]}<br>" +
                   "<b>Customer Tenure:</b> %{customdata[1]} days<br>" +
                   "<b>Purchases Per Day:</b> %{customdata[2]:.4f}<br>" +
-                  "<b>Spend Per Day:</b> $%{customdata[3]:.2f}<br>"
+                  "<b>Average Spend Per Day:</b> $%{customdata[3]:.2f}<br>"
 )
 
 st.plotly_chart(fig, use_container_width=True)
