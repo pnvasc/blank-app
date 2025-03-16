@@ -53,9 +53,6 @@ The dashboard expects two dataframes:
 ## Deployment
 This dashboard can be deployed on Streamlit Community Cloud by connecting this GitHub repository to your Streamlit account.
 
-## License
-[Choose an appropriate license]
-
 ## Acknowledgements
 - This dashboard was created as part of a customer segmentation analysis project
 - Visualization powered by Plotly and Streamlit
