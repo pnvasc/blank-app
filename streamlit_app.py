@@ -19,6 +19,14 @@ st.set_page_config(
 # If not, you'll need to add code to load them from files
 data = pd.read_csv('NoA-Connect-JrDataScience-Case(in).csv')  # Original dataframe with order_date, currency, and purchase_amount
 customer_features_clustered = pd.read_csv('customer_features_clustered.csv')  # Dataframe with features and clusters
+data['order_date'] = pd.to_datetime(data['order_date'])
+
+# Make sure date columns in customer_features are also datetime if needed
+if 'first_purchase' in customer_features_clustered.columns:
+    customer_features_clustered['first_purchase'] = pd.to_datetime(customer_features_clustered['first_purchase'])
+    
+if 'last_purchase' in customer_features_clustered.columns:
+    customer_features_clustered['last_purchase'] = pd.to_datetime(customer_features_clustered['last_purchase'])
 
 # Title and description
 st.title("Customer Segmentation Analysis Dashboard")
@@ -149,7 +157,7 @@ with row2_col2:
     })
     
     # Create radar chart
-    categories = ['Monetary Value', 'Purchase Frequency', 'Recency (lower is better)', 'Customer Value Score']
+    categories = ['Monetary Value', 'Purchase Frequency', 'Recency', 'Customer Value Score']
     
     fig = go.Figure()
     
