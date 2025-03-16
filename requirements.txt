@@ -1,10 +1,6 @@
-<<<<<<< HEAD
 streamlit
 pandas
 numpy
 plotly
 matplotlib
 seaborn
-=======
-streamlit
->>>>>>> b5c44284056b13e63d93617bcdd01f875b8fb7c2
