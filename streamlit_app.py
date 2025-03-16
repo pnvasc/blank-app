@@ -17,8 +17,8 @@ st.set_page_config(
 # Load your dataframes
 # Assuming these are already loaded in your environment
 # If not, you'll need to add code to load them from files
-data = data  # Original dataframe with order_date, currency, and purchase_amount
-customer_features_clustered = customer_features_clustered  # Dataframe with features and clusters
+data = pd.read_csv('NoA-Connect-JrDataScience-Case(in).csv')  # Original dataframe with order_date, currency, and purchase_amount
+customer_features_clustered = pd.read_csv('customer_features_clustered.csv')  # Dataframe with features and clusters
 
 # Title and description
 st.title("Customer Segmentation Analysis Dashboard")
