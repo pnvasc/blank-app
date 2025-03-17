@@ -144,11 +144,11 @@ with row2_col2:
     st.subheader("Average Metrics by Segment")
     
     # Calculate average metrics for each cluster
+    # Removed 'customer_value_score' since it doesn't exist
     cluster_metrics = filtered_customers.groupby('cluster').agg({
         'monetary': 'mean',
         'frequency': 'mean',
-        'recency': 'mean',
-        'customer_value_score': 'mean'
+        'recency': 'mean'
     }).reset_index()
     
     cluster_metrics['Segment'] = cluster_metrics['cluster'].map({
@@ -156,8 +156,8 @@ with row2_col2:
         0: "Occasional Buyers"
     })
     
-    # Create radar chart
-    categories = ['Monetary Value', 'Purchase Frequency', 'Recency', 'Customer Value Score']
+    # Create radar chart - modified to use only available columns
+    categories = ['Monetary Value', 'Purchase Frequency', 'Recency']
     
     fig = go.Figure()
     
@@ -167,10 +167,9 @@ with row2_col2:
         frequency_norm = row['frequency'] / cluster_metrics['frequency'].max()
         # Invert recency so lower is better
         recency_norm = 1 - (row['recency'] / cluster_metrics['recency'].max())
-        value_norm = row['customer_value_score'] / cluster_metrics['customer_value_score'].max()
         
         fig.add_trace(go.Scatterpolar(
-            r=[monetary_norm, frequency_norm, recency_norm, value_norm],
+            r=[monetary_norm, frequency_norm, recency_norm],
             theta=categories,
             fill='toself',
             name=row['Segment'],
@@ -193,25 +192,27 @@ with row2_col2:
 # Row with feature distributions
 st.subheader("Feature Distributions by Segment")
 
+# Select feature for histogram - removed 'customer_value_score'
+available_features = [col for col in ['monetary', 'frequency', 'recency', 'purchase_variability',
+                       'tenure_days', 'purchases_per_day', 'spend_per_day', 
+                       'recency_ratio'] if col in filtered_customers.columns]
+
+feature_labels = {
+    'monetary': 'Total Spend ($)',
+    'frequency': 'Purchase Frequency',
+    'recency': 'Days Since Last Purchase',
+    'purchase_variability': 'Purchase Variability',
+    'tenure_days': 'Customer Tenure (days)',
+    'purchases_per_day': 'Purchases Per Day',
+    'spend_per_day': 'Spend Per Day',
+    'recency_ratio': 'Recency Ratio'
+}
+
 # Select feature for histogram
 selected_feature = st.selectbox(
     "Select Feature to Compare",
-    options=[
-        'monetary', 'frequency', 'recency', 'purchase_variability',
-        'tenure_days', 'purchases_per_day', 'spend_per_day', 
-        'recency_ratio', 'customer_value_score'
-    ],
-    format_func=lambda x: {
-        'monetary': 'Total Spend ($)',
-        'frequency': 'Purchase Frequency',
-        'recency': 'Days Since Last Purchase',
-        'purchase_variability': 'Purchase Variability',
-        'tenure_days': 'Customer Tenure (days)',
-        'purchases_per_day': 'Purchases Per Day',
-        'spend_per_day': 'Spend Per Day ($)',
-        'recency_ratio': 'Recency Ratio',
-        'customer_value_score': 'Customer Value Score'
-    }[x]
+    options=available_features,
+    format_func=lambda x: feature_labels.get(x, x)
 )
 
 # Create a distribution plot
