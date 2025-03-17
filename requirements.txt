@@ -4,3 +4,7 @@ numpy
 plotly
 matplotlib
 seaborn
+torch
+ydata_profiling
+plotly
+scikit-learn
