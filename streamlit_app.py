@@ -207,6 +207,10 @@ selected_feature = st.selectbox(
         'recency': 'Days Since Last Purchase',
         'purchase_variability': 'Purchase Variability',
         'tenure_days': 'Customer Tenure (days)',
+        'purchases_per_day': 'Purchases Per Day',
+        'spend_per_day': 'Spend Per Day ($)',
+        'recency_ratio': 'Recency Ratio',
+        'customer_value_score': 'Customer Value Score'
     }[x]
 )
 
