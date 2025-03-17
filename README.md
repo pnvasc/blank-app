@@ -24,7 +24,7 @@ pip install -r requirements.txt
 
 ### Running Locally
 ```bash
-streamlit run noa_dashboard.py
+streamlit run streamlit_app.py
 ```
 
 ### Data Requirements
