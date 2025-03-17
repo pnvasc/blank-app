@@ -189,56 +189,6 @@ with row2_col2:
     
     st.plotly_chart(fig, use_container_width=True)
 
-# Row with RFM scatter plot
-st.subheader("RFM Analysis: Monetary vs Frequency")
-    
-# Create scatter plot with hover info
-# Calculate average spend per day for visualization
-filtered_customers['avg_daily_spend'] = filtered_customers['monetary'] / filtered_customers['tenure_days'].clip(lower=1)
-    
-fig = px.scatter(
-    filtered_customers,
-    x='frequency',
-    y='monetary',
-    color='cluster',
-    size='customer_value_score',
-    hover_name='customer_id',
-    hover_data=['recency', 'tenure_days', 'purchases_per_day', 'avg_daily_spend'],
-    color_discrete_map={1: "#1f77b4", 0: "#ff7f0e"},
-    labels={
-        'frequency': 'Purchase Frequency (Count)',
-        'monetary': 'Total Spend ($)',
-        'cluster': 'Customer Segment'
-    },
-    category_orders={"cluster": [1, 0]},
-    opacity=0.7
-)
-
-fig.update_layout(
-    legend_title="Customer Segment",
-    legend=dict(
-        yanchor="top",
-        y=0.99,
-        xanchor="right",
-        x=0.99,
-        orientation="h",
-        itemsizing="constant"
-    ),
-    height=500
-)
-
-# Update hover template
-fig.update_traces(
-    hovertemplate="<b>Customer ID:</b> %{hovertext}<br>" +
-                  "<b>Total Spend:</b> $%{y:.2f}<br>" +
-                  "<b>Purchase Frequency:</b> %{x}<br>" +
-                  "<b>Days Since Last Purchase:</b> %{customdata[0]}<br>" +
-                  "<b>Customer Tenure:</b> %{customdata[1]} days<br>" +
-                  "<b>Purchases Per Day:</b> %{customdata[2]:.4f}<br>" +
-                  "<b>Average Spend Per Day:</b> $%{customdata[3]:.2f}<br>"
-)
-
-st.plotly_chart(fig, use_container_width=True)
 
 # Row with feature distributions
 st.subheader("Feature Distributions by Segment")
